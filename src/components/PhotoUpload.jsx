@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Camera, Plus } from 'lucide-react';
+import { Camera } from 'lucide-react';
 import { compressImage } from '../utils/photoUtils';
 
 const MAX_PHOTOS = 5;

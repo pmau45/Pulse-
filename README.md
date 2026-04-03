@@ -68,11 +68,15 @@ npm run preview
 | Key | Description |
 |-----|-------------|
 | `pulse_user_profile` | Completed user profile from onboarding |
-| `pulse_app_state` | Current view (onboarding / home / detail / chat) |
+| `pulse_app_state` | Current view (welcome / onboarding / locationPermission / home / chat / settings / editPhotos) |
 | `pulse_active_pod` | The pod the user most recently joined |
 | `pulse_pods_history` | List of all pods the user has joined |
 | `pulse_exchanges` | List of all info-exchange records |
 | `pulse_storage_version` | Schema version for future migrations |
+| `pulse_user_photos` | Array of base64-encoded profile photo data URLs |
+| `pulse_user_settings` | User preferences (theme, notifications, location, visibility, photo privacy) |
+| `pulse_chat_end_time` | Epoch ms timestamp when the active chat session ends |
+| `pulse_missed_connections` | Count of chats that expired without an exchange |
 
 ## Resetting Your Profile
 

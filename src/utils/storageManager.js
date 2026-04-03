@@ -3,11 +3,12 @@ export const STORAGE_KEYS = {
   APP_STATE: 'pulse_app_state',
   ACTIVE_POD: 'pulse_active_pod',
   PODS_HISTORY: 'pulse_pods_history',
-  CHAT_HISTORY: 'pulse_chat_history',
   EXCHANGES: 'pulse_exchanges',
   STORAGE_VERSION: 'pulse_storage_version',
   USER_PHOTOS: 'pulse_user_photos',
   USER_SETTINGS: 'pulse_user_settings',
+  CHAT_END_TIME: 'pulse_chat_end_time',
+  MISSED_CONNECTIONS: 'pulse_missed_connections',
 };
 
 const CURRENT_VERSION = '1.0.0';
@@ -72,7 +73,7 @@ export const storageManager = {
       const profile = JSON.parse(
         localStorage.getItem(STORAGE_KEYS.USER_PROFILE) || 'null'
       );
-      return !!(profile && profile.username && profile.phone && profile.zipCode);
+      return !!(profile && profile.username && profile.phone);
     } catch {
       return false;
     }
