@@ -33,9 +33,6 @@ export const storageManager = {
         podsHistory: JSON.parse(
           localStorage.getItem(STORAGE_KEYS.PODS_HISTORY) || '[]'
         ),
-        chatHistory: JSON.parse(
-          localStorage.getItem(STORAGE_KEYS.CHAT_HISTORY) || '[]'
-        ),
         exchanges: JSON.parse(
           localStorage.getItem(STORAGE_KEYS.EXCHANGES) || '[]'
         ),
