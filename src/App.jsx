@@ -161,7 +161,6 @@ export default function App() {
   // --- TIMER EFFECT ---
   useEffect(() => {
     if (currentView !== 'chat' || !chatEndTime) return;
-    destructionFiredRef.current = false; // reset when starting a new chat session
     const tick = () => {
       const remaining = Math.max(0, Math.floor((chatEndTime - Date.now()) / 1000));
       setChatTimer(remaining);
@@ -238,6 +237,8 @@ export default function App() {
 
   const joinPod = (pod) => {
     triggerHaptic();
+    // Reset self-destruct guard so it can fire once for this new chat session
+    destructionFiredRef.current = false;
     // Show GPS distance if available; 'N/A' otherwise (no mock distance from unrelated data)
     const dist = userLocation
       ? calculateHaversine(
@@ -643,9 +644,9 @@ export default function App() {
         <p className="text-gray-400 mb-4 border-b border-gray-800 pb-2">
           <span className="font-semibold text-white">Upcoming Pods</span>
           {userLocation ? (
-            <span className="text-[#00E5FF] text-xs ml-2">{'·'} GPS Active</span>
+            <span className="text-[#00E5FF] text-xs ml-2">· GPS Active</span>
           ) : (
-            <span className="text-gray-600 text-xs ml-2">{'·'} Location off</span>
+            <span className="text-gray-600 text-xs ml-2">· Location off</span>
           )}
         </p>
 
@@ -805,7 +806,10 @@ export default function App() {
                   Matched in {activePod?.title?.split(' ')[0]} Pod
                 </h3>
                 <p className="text-gray-400 text-sm">
-                  {MOCK_MATCH.username} · {MOCK_MATCH.age} · {activePod?.distance || 'N/A'} mi
+                  {MOCK_MATCH.username} · {MOCK_MATCH.age}
+                  {activePod?.distance && activePod.distance !== 'N/A'
+                    ? ` · ${activePod.distance} mi`
+                    : ''}
                 </p>
               </div>
             </div>
