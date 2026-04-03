@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { useLocalStorage } from './hooks/useLocalStorage';
 import { useSettings } from './hooks/useSettings';
-import { storageManager } from './utils/storageManager';
+import { storageManager, STORAGE_KEYS } from './utils/storageManager';
 import PhotoGallery from './components/PhotoGallery';
 import Settings from './components/Settings';
 
@@ -122,15 +122,15 @@ export default function App() {
   // --- PERSISTENT STATE (localStorage) ---
   const [userProfile, setUserProfile] = useLocalStorage('pulse_user_profile', null);
   const [currentView, setCurrentView] = useLocalStorage(
-    'pulse_app_state',
+    STORAGE_KEYS.APP_STATE,
     storageManager.hasCompletedProfile() ? 'home' : 'welcome',
   );
-  const [activePod, setActivePod] = useLocalStorage('pulse_active_pod', null);
-  const [chatEndTime, setChatEndTime] = useLocalStorage('pulse_chat_end_time', null);
-  const [exchanges, setExchanges] = useLocalStorage('pulse_exchanges', []);
-  const [missedConnections, setMissedConnections] = useLocalStorage('pulse_missed_connections', 0);
-  const [podsHistory, setPodsHistory] = useLocalStorage('pulse_pods_history', []);
-  const [userPhotos, setUserPhotos] = useLocalStorage('pulse_user_photos', []);
+  const [activePod, setActivePod] = useLocalStorage(STORAGE_KEYS.ACTIVE_POD, null);
+  const [chatEndTime, setChatEndTime] = useLocalStorage(STORAGE_KEYS.CHAT_END_TIME, null);
+  const [exchanges, setExchanges] = useLocalStorage(STORAGE_KEYS.EXCHANGES, []);
+  const [missedConnections, setMissedConnections] = useLocalStorage(STORAGE_KEYS.MISSED_CONNECTIONS, 0);
+  const [podsHistory, setPodsHistory] = useLocalStorage(STORAGE_KEYS.PODS_HISTORY, []);
+  const [userPhotos, setUserPhotos] = useLocalStorage(STORAGE_KEYS.USER_PHOTOS, []);
   const [settings, setSettings] = useSettings();
 
   // --- LOCAL STATE ---
@@ -1002,6 +1002,7 @@ export default function App() {
   return (
     <div className="w-full h-full bg-[#0A0A0C] font-sans overflow-hidden">
       <div className="w-full h-full relative overflow-hidden">
+        {currentView === 'welcome' && renderWelcome()}
         {currentView === 'onboarding' && renderOnboarding()}
         {currentView === 'locationPermission' && renderLocationPermission()}
         {currentView === 'home' && userProfile && renderHome()}
