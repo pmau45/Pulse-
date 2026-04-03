@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import {
   MapPin, Clock, ChevronLeft, MoreVertical,
-  Send, Mic, CheckCircle, X, Users, Camera, ArrowRight
+  Send, Mic, CheckCircle, X, Users, Camera, ArrowRight, Settings as SettingsIcon
 } from 'lucide-react';
 import { useLocalStorage } from './hooks/useLocalStorage';
+import { useSettings } from './hooks/useSettings';
 import { storageManager } from './utils/storageManager';
+import PhotoGallery from './components/PhotoGallery';
+import Settings from './components/Settings';
 
 // --- MOCK DATA ---
 const POD_ZIP = '32204';
@@ -79,6 +82,8 @@ export default function App() {
   const [activePod, setActivePod] = useLocalStorage('pulse_active_pod', null);
   const [exchanges, setExchanges] = useLocalStorage('pulse_exchanges', []);
   const [podsHistory, setPodsHistory] = useLocalStorage('pulse_pods_history', []);
+  const [userPhotos, setUserPhotos] = useLocalStorage('pulse_user_photos', []);
+  const [settings, setSettings] = useSettings();
 
   // --- LOCAL-ONLY STATE ---
   const [hasExchanged, setHasExchanged] = useState(false);
@@ -252,19 +257,17 @@ export default function App() {
                 What gets unlocked if you both hit &ldquo;Exchange&rdquo;.
               </p>
 
-              <div className="flex flex-col items-center mb-6">
-                <div className="w-24 h-24 rounded-full bg-[#1C1C1E] border-2 border-dashed border-gray-600 flex items-center justify-center mb-3 overflow-hidden relative">
-                  {formData.photoUrl ? (
-                    <img
-                      src={formData.photoUrl}
-                      alt="Avatar"
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <Camera size={32} className="text-gray-500" />
-                  )}
-                </div>
-                <p className="text-xs text-gray-500">Avatar locked until exchange</p>
+              <div>
+                <label className="text-sm text-gray-400 mb-3 block">
+                  Profile Photos
+                </label>
+                <PhotoGallery
+                  photos={userPhotos}
+                  onPhotosChange={setUserPhotos}
+                />
+                <p className="text-xs text-gray-600 mt-2">
+                  Photos are locked until both sides exchange info.
+                </p>
               </div>
 
               <div>
@@ -326,12 +329,27 @@ export default function App() {
     <div className="flex flex-col h-full bg-[#111113] text-white overflow-y-auto pb-20 px-5 pt-12 animate-fade-in">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold tracking-widest text-[#00E5FF]">PULSE</h1>
-        <div className="w-8 h-8 rounded-full bg-gray-700 overflow-hidden border border-gray-600">
-          <img
-            src={userProfile.photoUrl}
-            alt="Self"
-            className="w-full h-full object-cover"
-          />
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setCurrentView('settings')}
+            className="p-2 text-gray-400 hover:text-white transition-colors"
+            aria-label="Open settings"
+          >
+            <SettingsIcon size={22} aria-hidden="true" />
+          </button>
+          <div className="w-8 h-8 rounded-full bg-gray-700 overflow-hidden border border-gray-600">
+            {userPhotos.length > 0 ? (
+              <img
+                src={userPhotos[0]}
+                alt="Self"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold">
+                {userProfile.username?.[0]?.toUpperCase() || '?'}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -391,6 +409,39 @@ export default function App() {
             </div>
           );
         })}
+      </div>
+
+      {/* My Photos section */}
+      <div className="mt-8">
+        <div className="flex justify-between items-center mb-3">
+          <p className="text-sm font-semibold text-white">My Photos</p>
+          <button
+            onClick={() => setCurrentView('editPhotos')}
+            className="text-xs text-[#00E5FF] hover:underline"
+          >
+            {userPhotos.length === 0 ? 'Add Photos' : 'Edit'}
+          </button>
+        </div>
+        {userPhotos.length > 0 ? (
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
+            {userPhotos.map((src, idx) => (
+              <div
+                key={idx}
+                className="w-20 h-20 rounded-xl overflow-hidden shrink-0 border border-gray-800"
+              >
+                <img src={src} alt={`Photo ${idx + 1}`} className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <button
+            onClick={() => setCurrentView('editPhotos')}
+            className="w-full bg-[#1C1C1E] border border-dashed border-gray-700 rounded-xl py-4 text-gray-500 text-sm flex items-center justify-center gap-2 hover:border-[#00E5FF] hover:text-[#00E5FF] transition-colors"
+          >
+            <Camera size={18} aria-hidden="true" />
+            Upload photos to show after exchange
+          </button>
+        )}
       </div>
 
       {/* Bottom Nav */}
@@ -638,6 +689,37 @@ export default function App() {
         {currentView === 'home' && userProfile && renderHome()}
         {currentView === 'detail' && activePod && renderDetail()}
         {currentView === 'chat' && activePod && renderChat()}
+        {currentView === 'settings' && (
+          <Settings
+            settings={settings}
+            onSettingsChange={setSettings}
+            onBack={() => setCurrentView('home')}
+            onClearData={() => {
+              storageManager.clearAllData();
+              setCurrentView('onboarding');
+            }}
+          />
+        )}
+        {currentView === 'editPhotos' && (
+          <div className="flex flex-col h-full bg-[#0A0A0C] text-white overflow-y-auto animate-fade-in">
+            <div className="flex items-center gap-3 px-5 pt-12 pb-6 border-b border-gray-800">
+              <button
+                onClick={() => setCurrentView('home')}
+                className="p-2 -ml-2 text-gray-400 hover:text-white transition-colors"
+                aria-label="Go back"
+              >
+                <ChevronLeft size={24} />
+              </button>
+              <h1 className="text-xl font-bold tracking-wide">My Photos</h1>
+            </div>
+            <div className="flex-1 px-5 py-6">
+              <p className="text-gray-400 text-sm mb-6">
+                These photos are revealed to your match after both sides exchange info.
+              </p>
+              <PhotoGallery photos={userPhotos} onPhotosChange={setUserPhotos} />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

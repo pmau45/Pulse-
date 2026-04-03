@@ -6,6 +6,8 @@ export const STORAGE_KEYS = {
   CHAT_HISTORY: 'pulse_chat_history',
   EXCHANGES: 'pulse_exchanges',
   STORAGE_VERSION: 'pulse_storage_version',
+  USER_PHOTOS: 'pulse_user_photos',
+  USER_SETTINGS: 'pulse_user_settings',
 };
 
 const CURRENT_VERSION = '1.0.0';
@@ -35,6 +37,12 @@ export const storageManager = {
         ),
         exchanges: JSON.parse(
           localStorage.getItem(STORAGE_KEYS.EXCHANGES) || '[]'
+        ),
+        userPhotos: JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.USER_PHOTOS) || '[]'
+        ),
+        userSettings: JSON.parse(
+          localStorage.getItem(STORAGE_KEYS.USER_SETTINGS) || '{}'
         ),
       };
     } catch (error) {
