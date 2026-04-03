@@ -120,7 +120,7 @@ export default function App() {
   }, []);
 
   // --- PERSISTENT STATE (localStorage) ---
-  const [userProfile, setUserProfile] = useLocalStorage('pulse_user_profile', null);
+  const [userProfile, setUserProfile] = useLocalStorage(STORAGE_KEYS.USER_PROFILE, null);
   const [currentView, setCurrentView] = useLocalStorage(
     STORAGE_KEYS.APP_STATE,
     storageManager.hasCompletedProfile() ? 'home' : 'welcome',
