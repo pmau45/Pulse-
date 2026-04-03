@@ -1000,16 +1000,8 @@ export default function App() {
   };
 
   return (
-    <div className="w-full h-screen bg-black flex justify-center items-center font-sans overflow-hidden">
-      <style>{`
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-      `}</style>
-      {/* Mobile Constraint Wrapper */}
-      <div className="w-full max-w-md h-full sm:h-[850px] sm:rounded-[3rem] sm:border-[8px] border-gray-900 relative overflow-hidden shadow-2xl">
-        {currentView === 'welcome' && renderWelcome()}
+    <div className="w-full h-full bg-[#0A0A0C] font-sans overflow-hidden">
+      <div className="w-full h-full relative overflow-hidden">
         {currentView === 'onboarding' && renderOnboarding()}
         {currentView === 'locationPermission' && renderLocationPermission()}
         {currentView === 'home' && userProfile && renderHome()}
