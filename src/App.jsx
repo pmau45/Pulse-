@@ -155,13 +155,22 @@ export default function App() {
     exchangeStatusRef.current = exchangeStatus;
   }, [exchangeStatus]);
 
+  // Guard ref so destruction only fires once even though tick runs every second at 0
+  const destructionFiredRef = useRef(false);
+
   // --- TIMER EFFECT ---
   useEffect(() => {
     if (currentView !== 'chat' || !chatEndTime) return;
+    destructionFiredRef.current = false; // reset when starting a new chat session
     const tick = () => {
       const remaining = Math.max(0, Math.floor((chatEndTime - Date.now()) / 1000));
       setChatTimer(remaining);
-      if (remaining === 0 && exchangeStatusRef.current !== 'mutual') {
+      if (
+        remaining === 0 &&
+        exchangeStatusRef.current !== 'mutual' &&
+        !destructionFiredRef.current
+      ) {
+        destructionFiredRef.current = true;
         setShowDestructionModal(true);
         setMissedConnections((prev) => prev + 1);
       }
@@ -169,7 +178,7 @@ export default function App() {
     tick();
     const interval = setInterval(tick, 1000);
     return () => clearInterval(interval);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- setters are stable; exchangeStatusRef tracks latest value
   }, [currentView, chatEndTime]);
 
   // Scroll to latest message
@@ -196,7 +205,7 @@ export default function App() {
     if (navigator.vibrate) navigator.vibrate(50);
   };
 
-  const showTimerWarning = (seconds) => {
+  const getTimerWarningLevel = (seconds) => {
     if (seconds > 0 && seconds <= 60) return 'critical';
     if (seconds > 60 && seconds <= 300) return 'warning';
     return null;
@@ -229,12 +238,13 @@ export default function App() {
 
   const joinPod = (pod) => {
     triggerHaptic();
+    // Show GPS distance if available; 'N/A' otherwise (no mock distance from unrelated data)
     const dist = userLocation
       ? calculateHaversine(
           userLocation.lat, userLocation.lon,
           POD_CENTER.lat, POD_CENTER.lon,
         ).toFixed(1)
-      : MOCK_MATCH.distance;
+      : 'N/A';
 
     const podWithDistance = { ...pod, distance: dist };
     setActivePod(podWithDistance);
@@ -602,7 +612,7 @@ export default function App() {
         </div>
 
         <h2 className="text-3xl font-semibold mb-6">
-          Hey, {userProfile?.username} {'\u{1F44B}'}
+          Hey, {userProfile?.username} 👋
         </h2>
 
         {/* Next Pod Countdown */}
@@ -737,7 +747,7 @@ export default function App() {
   };
 
   const renderChat = () => {
-    const warningLevel = showTimerWarning(chatTimer);
+    const warningLevel = getTimerWarningLevel(chatTimer);
     const timerColor =
       warningLevel === 'critical' ? '#FF2D55' : warningLevel === 'warning' ? '#FF9500' : '#FF2D55';
 
@@ -751,7 +761,7 @@ export default function App() {
               {formatTime(chatTimer)}
             </div>
             <div className="text-sm font-medium" style={{ color: timerColor }}>
-              {warningLevel === 'critical' ? '\u26A0 exchange now!' : 'remaining'}
+              {warningLevel === 'critical' ? 'exchange now!' : 'remaining'}
             </div>
           </div>
           <button
