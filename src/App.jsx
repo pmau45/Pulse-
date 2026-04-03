@@ -631,9 +631,8 @@ export default function App() {
   );
 
   return (
-    <div className="w-full h-screen bg-black flex justify-center items-center font-sans overflow-hidden">
-      {/* Mobile Constraint Wrapper */}
-      <div className="w-full max-w-md h-full sm:h-[850px] sm:rounded-[3rem] sm:border-[8px] border-gray-900 relative overflow-hidden shadow-2xl">
+    <div className="w-full h-full bg-[#0A0A0C] font-sans overflow-hidden">
+      <div className="w-full h-full relative overflow-hidden">
         {currentView === 'onboarding' && renderOnboarding()}
         {currentView === 'home' && userProfile && renderHome()}
         {currentView === 'detail' && activePod && renderDetail()}
