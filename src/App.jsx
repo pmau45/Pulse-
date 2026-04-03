@@ -626,7 +626,7 @@ export default function App() {
           <h3 className="text-xl font-semibold mb-1">{nextPod.title}</h3>
           <p className="text-gray-400 text-sm mb-3">
             {nextPod.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            {' \u00B7 '}{nextPod.radiusMiles} mi radius
+            {' · '}{nextPod.radiusMiles} mi radius
           </p>
           {nextPod.isLive ? (
             <div className="flex items-center gap-2">
@@ -643,9 +643,9 @@ export default function App() {
         <p className="text-gray-400 mb-4 border-b border-gray-800 pb-2">
           <span className="font-semibold text-white">Upcoming Pods</span>
           {userLocation ? (
-            <span className="text-[#00E5FF] text-xs ml-2">{'\u00B7'} GPS Active</span>
+            <span className="text-[#00E5FF] text-xs ml-2">{'·'} GPS Active</span>
           ) : (
-            <span className="text-gray-600 text-xs ml-2">{'\u00B7'} Location off</span>
+            <span className="text-gray-600 text-xs ml-2">{'·'} Location off</span>
           )}
         </p>
 
@@ -669,10 +669,10 @@ export default function App() {
                 </div>
                 <p className="text-gray-300 font-medium mb-1">
                   {pod.startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                  {' \u2014 '}{pod.chatDurationMinutes} min chat
+                  {' — '}{pod.chatDurationMinutes} min chat
                 </p>
                 <p className="text-gray-500 text-sm mb-4">
-                  {pod.spotsLeft} spots left {'\u00B7'} {pod.radiusMiles} mi radius
+                  {pod.spotsLeft} spots left · {pod.radiusMiles} mi radius
                 </p>
                 {pod.isLive || canJoin ? (
                   <>
@@ -749,7 +749,7 @@ export default function App() {
   const renderChat = () => {
     const warningLevel = getTimerWarningLevel(chatTimer);
     const timerColor =
-      warningLevel === 'critical' ? '#FF2D55' : warningLevel === 'warning' ? '#FF9500' : '#FF2D55';
+      warningLevel === 'critical' ? '#FF2D55' : warningLevel === 'warning' ? '#FF9500' : '#FFFFFF';
 
     return (
       <div className="flex flex-col h-full bg-[#111113] text-white relative animate-fade-in">
@@ -787,7 +787,7 @@ export default function App() {
             <span className="text-sm font-medium">
               {warningLevel === 'critical'
                 ? 'Less than 1 minute! Exchange now or this chat disappears.'
-                : '5 minutes left \u2014 consider exchanging info!'}
+                : '5 minutes left — consider exchanging info!'}
             </span>
           </div>
         )}
@@ -805,7 +805,7 @@ export default function App() {
                   Matched in {activePod?.title?.split(' ')[0]} Pod
                 </h3>
                 <p className="text-gray-400 text-sm">
-                  {MOCK_MATCH.username} {'\u00B7'} {MOCK_MATCH.age} {'\u00B7'} {activePod?.distance || '2.3'} mi
+                  {MOCK_MATCH.username} · {MOCK_MATCH.age} · {activePod?.distance || 'N/A'} mi
                 </p>
               </div>
             </div>
@@ -910,7 +910,7 @@ export default function App() {
             {exchangeStatus === 'pending'
               ? 'Waiting for match...'
               : exchangeStatus === 'mutual'
-              ? 'Exchanged! \u2713'
+              ? 'Exchanged! ✓'
               : 'Exchange Info'}
           </button>
         </div>
