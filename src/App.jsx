@@ -9,6 +9,7 @@ import { useSettings } from './hooks/useSettings';
 import { storageManager, STORAGE_KEYS } from './utils/storageManager';
 import PhotoGallery from './components/PhotoGallery';
 import Settings from './components/Settings';
+import BrandHeader from './components/BrandHeader';
 
 // --- GEOLOCATION UTILITIES ---
 const EARTH_RADIUS_MILES = 3958.8;
@@ -591,7 +592,7 @@ export default function App() {
     return (
       <div className="flex flex-col h-full bg-[#111113] text-white overflow-y-auto pb-20 px-5 pt-12 animate-fade-in">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold tracking-widest text-[#00E5FF]">PULSE</h1>
+          <BrandHeader />
           <div className="flex items-center gap-3">
             <button
               onClick={() => setCurrentView('settings')}
