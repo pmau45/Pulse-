@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-pulse-bg text-pulse-text font-sans;
+  }
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -23,6 +29,18 @@ body {
 #root {
   height: 100%;
   width: 100%;
+}
+
+@layer components {
+  .pulse-button {
+    @apply bg-gradient-to-r from-pulse-primary to-pulse-accent text-pulse-text font-semibold px-8 py-4 rounded-2xl shadow-pulse-glow hover:shadow-pulse-heat transition-all duration-300 active:scale-95;
+  }
+  .pod-card {
+    @apply bg-pulse-surface border border-pulse-primary/30 rounded-3xl p-6 hover:border-pulse-primary/80 hover:shadow-pulse-glow transition-all duration-300;
+  }
+  .brand-header {
+    @apply flex items-center gap-3 text-3xl font-bold tracking-tighter;
+  }
 }
 
 .hide-scrollbar::-webkit-scrollbar {
